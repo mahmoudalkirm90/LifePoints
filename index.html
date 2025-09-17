@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تسجيل LifePoints</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body {
+  font-family: 'Tajawal', sans-serif;
+  background: #0f172a;
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #f8fafc;
+  overflow: hidden;
+}
+.box {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+  width: 90%;
+  max-width: 420px;
+  margin-bottom: 20px;
+  animation: fadeSlide 0.8s ease forwards;
+  transform: translateY(20px);
+  opacity: 0;
+  position: relative;
+  z-index: 1;
+}
+@keyframes fadeSlide { to { transform: translateY(0); opacity: 1; } }
+input, select {
+  padding: 12px;
+  width: 85%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
+  border-radius: 12px;
+  margin-bottom: 15px;
+  font-size: 16px;
+  color: #f1f5f9;
+  outline: none;
+  transition: border 0.3s ease, background 0.3s ease;
+}
+input:focus, select:focus {
+  border-color: #38bdf8;
+  background: rgba(255,255,255,0.15);
+}
+button {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 12px;
+  width: 90%;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  box-shadow: 0 4px 15px rgba(56,189,248,0.3);
+  transition: transform 0.2s ease, background 0.3s ease;
+  margin-bottom: 10px;
+}
+button:hover {
+  background: linear-gradient(135deg, #0ea5e9, #0284c7);
+  transform: translateY(-2px);
+}
+.telegram-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #38bdf8;
+  font-weight: bold;
+  font-size: 18px;
+  transition: color 0.3s ease, transform 0.3s ease;
+}
+.telegram-link:hover {
+  color: #0ea5e9;
+  transform: translateX(5px);
+}
+#stageInfo {
+  margin-bottom: 15px;
+  color: #38bdf8;
+  font-weight: bold;
+}
+#adminPanel {
+  display: none;
+  background: rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+}
+#generatedPasswords {
+  margin-top:10px;
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.3);
+}
+#matrixCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+</style>
+</head>
+<body>
+
+<canvas id="matrixCanvas"></canvas>
+
+<div class="box" id="loginBox">
+    <h2>أدخل الكود</h2>
+    <div id="stageInfo"></div>
+    <input type="password" id="password" placeholder="">
+    <br>
+    <button onclick="checkPassword()">دخول</button>
+</div>
+
+<div class="box" id="adminPanel">
+    <h3>لوحة المدير</h3>
+    <p>يمكنك نسخ كلمات المرور للزوار:</p>
+    <div id="generatedPasswords"></div>
+</div>
+
+<div class="box" id="formBox" style="display:none;">
+    <h2>التسجيل في LifePoints</h2>
+    <p>يمكنك تعديل بياناتك قبل المتابعة</p>
+    <input type="text" id="fname" placeholder="الاسم الأول"><br>
+    <input type="text" id="lname" placeholder="الاسم الثاني"><br>
+    <input type="email" id="mail" placeholder="example@mail.com"><br>
+    <select id="state"></select><br>
+    <button onclick="submitForm()">الحصول على احالة</button>
+</div>
+
+<div class="box" id="regionBox" style="display:none;">
+    <h3>اختر الدولة:</h3>
+    <button onclick="showUSForm()"> لايف أمريكي</button>
+    <button onclick="showUKForm()"> لايف بريطاني</button>
+</div>
+
+<div class="box">
+    <h3>لا تملك كود؟ أحصل الان عليه</h3>
+    <p><a href="https://t.me/mahmoud11818" target="_blank" class="telegram-link">@mahmoud11818</a></p>
+    <p>قناتنا على التلغرام: <a href="https://t.me/gmailcommunity_salesdepartment" target="_blank" class="telegram-link">https://t.me/gmailcommunity_salesdepartment</a></p>
+</div>
+
+<script>
+// خلفية ماتريكس
+// const canvas = document.getElementById("matrixCanvas");
+// const ctx = canvas.getContext("2d");
+// canvas.width = window.innerWidth;
+// canvas.height = window.innerHeight;
+// const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
+// const fontSize = 16;
+// const columns = Math.floor(canvas.width / fontSize);
+// const drops = Array(columns).fill(1);
+// function drawMatrix() {
+//   ctx.fillStyle = 'rgba(0,0,0,0.05)';
+//   ctx.fillRect(0, 0, canvas.width, canvas.height);
+//   ctx.fillStyle = '#0F0';
+//   ctx.font = fontSize + "px monospace";
+//   for (let i = 0; i < drops.length; i++) {
+//     const text = letters.charAt(Math.floor(Math.random() * letters.length));
+//     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+//     if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) { drops[i] = 0; }
+//     drops[i]++;
+//   }
+// }
+window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+// كلمات مرور الزوار
+let visitorPasswords = [
+  'c_5iD?J+', '#{vH]tQX', 'O28v.*-d', '7)x6LaVE', 'RXCX.%B6',
+  'Jitj;]rZ', 'Jk8D4TL>', 'PS{O-pFQ', 'Op5Z]DVC', 'QF0{seeM',
+  '79R-ay5L', 'vKYBwdOD', '){dNEZr6', 'yb8l?g{a', 't3oks6$8',
+  '@=o#>PUV', '!5>Y5u_)', 'Ffs0xelD', 'Hs&G:DH&', 'DJ6C(nuq',
+  'w9tG>dzo', 'pSo-ueTH', 'Gk}dTcQ3', 'U?D&_ejh', '?J7yb(ly',
+  'J|}OkjWe', 'A.Se<XEz', 'm]ua$2wA', 't%#f2Gm,', ')fkmxpUh',
+  '|xE4mk{f', '9cwXw^Sp', 'tEvaJIwt', 'qT|<,3xr', '<v7_wJGs',
+  'ya_&zDUx', 'HbA*{{BF', '$49(!P!t', 'm)NP:t{C', 'EMCa#=g9',
+  'vcK{-v.@', 'y&t;wc0C', 'cM;HSe+W', '7&kZ|dLv', 'MEBL!Ha^',
+  'P5|YI3%x', 'oGovCw[L', '%qHhz^e6', '.>AmVpOV', '{?7ljdUX',
+  'v,j*]p:B', 'ew=cpy&B', 'ZHNai-gM', '|+s{;]!@', 'D:#h@;Tr',
+  'woyD,cI&', 'WRx7&4x5', '3Xu,.zPY', ':151IU+!', 'Pi68%H]N',
+  '+J8Ew@;c', '<upa9SA:', '@9NJ9+,j', 'D$_0HSN$', 'sh-cSGl]',
+  '9Db*Nq2c', 'Ah,>6Wue', 'ug@9ap9t', 'DXcUp!6Z', '5Zar{G4K',
+  'UrY8AI3I', 'Jb;.-wVm', '4v5&2>eF', 'qsn9tRkS', 'A>t]iWb;',
+  'I$%_Hioc', '7xLfm1u{', '#cMD8&V+', 'YwZpD@+:', 'x4Sw98{)',
+  'zQ[bL4Pv', 'Z.38(HRh', 'h?_=k}l)', 'Hq4nnm)}', 'i,OsSHV-',
+  'Qqd0+Re3', 'zL)s#egs', 'M-v7-HqE', '>xQ:6M$l', 'qYiadF]b',
+  'L[jhMsY9', '-+KxvFUS', 't?6K&{Rn', '?WgaOYQc', 'Nrd:4tml',
+  'c5UBn@%3', 'zii0Z<;*', 'jyZ,DP*1', 's%@om&.|', 'bAC<*EbA',
+];
+visitorPasswords.forEach(e => console.log(e))
+let usedPasswords = JSON.parse(sessionStorage.getItem("usedPasswords") || "[]");
+
+function updateStageInfo(text){ document.getElementById("stageInfo").textContent = text; }
+
+function checkPassword(){
+    const passInput = document.getElementById("password").value.trim();
+    if(passInput === "bodex55510200"){
+        document.getElementById("adminPanel").style.display = "block";
+        updateStageInfo("مرحباً بالمدير! يمكنك نسخ كلمات المرور للزوار.");
+        document.getElementById("loginBox").style.display = "none";
+        displayVisitorPasswords();
+        document.getElementById("password").value = "";
+        return;
+    }
+    if(visitorPasswords.includes(passInput)){
+        if(usedPasswords.includes(passInput)){
+            alert("تم استخدام كلمة المرور وانتهت صلاحيتها.");
+        } else {
+            usedPasswords.push(passInput);
+            sessionStorage.setItem("usedPasswords", JSON.stringify(usedPasswords));
+            document.getElementById("loginBox").style.display = "none";
+            document.getElementById("regionBox").style.display = "block";
+            updateStageInfo("اختر دولتك أولاً");
+        }
+    } else {
+        alert("كلمة المرور غير صحيحة.");
+    }
+    document.getElementById("password").value = "";
+}
+
+// عرض كلمات السر مع زر نسخ صغير
+function displayVisitorPasswords(){
+    const passList = document.getElementById("generatedPasswords");
+    passList.innerHTML = "";
+    visitorPasswords.forEach(pass=>{
+        const div = document.createElement("div");
+        div.style.display = "flex";
+        div.style.justifyContent = "space-between";
+        div.style.alignItems = "center";
+        div.style.marginBottom = "5px";
+        div.style.whiteSpace = "nowrap";
+
+        const spanPass = document.createElement("span");
+        spanPass.textContent = pass;
+        spanPass.style.overflow = "hidden";
+        spanPass.style.textOverflow = "ellipsis";
+        spanPass.style.flex = "1";
+
+        const copyBtn = document.createElement("button");
+        copyBtn.textContent = "نسخ";
+        copyBtn.style.background = "#38bdf8";
+        copyBtn.style.color = "#fff";
+        copyBtn.style.fontSize = "12px";
+        copyBtn.style.padding = "4px 8px";
+        copyBtn.style.borderRadius = "6px";
+        copyBtn.style.border = "none";
+        copyBtn.style.cursor = "pointer";
+        copyBtn.style.marginLeft = "10px";
+        copyBtn.style.flexShrink = "0";
+        copyBtn.style.width = "auto";
+        copyBtn.onclick = () => navigator.clipboard.writeText(pass);
+
+        div.appendChild(spanPass);
+        div.appendChild(copyBtn);
+        passList.appendChild(div);
+    });
+}
+// خيارات الدولة
+let currentRegion = null;
+const usStates = [
+  {name:"Alabama", code:"AL"}, {name:"Alaska", code:"AK"}, {name:"Arizona", code:"AZ"},
+  {name:"Arkansas", code:"AR"}, {name:"California", code:"CA"}, {name:"Colorado", code:"CO"},
+  {name:"Connecticut", code:"CT"}, {name:"Delaware", code:"DE"}, {name:"Florida", code:"FL"},
+  {name:"Georgia", code:"GA"}, {name:"Hawaii", code:"HI"}, {name:"Idaho", code:"ID"},
+  {name:"Illinois", code:"IL"}, {name:"Indiana", code:"IN"}, {name:"Iowa", code:"IA"},
+  {name:"Kansas", code:"KS"}, {name:"Kentucky", code:"KY"}, {name:"Louisiana", code:"LA"},
+  {name:"Maine", code:"ME"}, {name:"Maryland", code:"MD"}, {name:"Massachusetts", code:"MA"},
+  {name:"Michigan", code:"MI"}, {name:"Minnesota", code:"MN"}, {name:"Mississippi", code:"MS"},
+  {name:"Missouri", code:"MO"}, {name:"Montana", code:"MT"}, {name:"Nebraska", code:"NE"},
+  {name:"Nevada", code:"NV"}, {name:"New Hampshire", code:"NH"}, {name:"New Jersey", code:"NJ"},
+  {name:"New Mexico", code:"NM"}, {name:"New York", code:"NY"}, {name:"North Carolina", code:"NC"},
+  {name:"North Dakota", code:"ND"}, {name:"Ohio", code:"OH"}, {name:"Oklahoma", code:"OK"},
+  {name:"Oregon", code:"OR"}, {name:"Pennsylvania", code:"PA"}, {name:"Rhode Island", code:"RI"},
+  {name:"South Carolina", code:"SC"}, {name:"South Dakota", code:"SD"}, {name:"Tennessee", code:"TN"},
+  {name:"Texas", code:"TX"}, {name:"Utah", code:"UT"}, {name:"Vermont", code:"VT"}, {name:"Virginia", code:"VA"},
+  {name:"Washington", code:"WA"}, {name:"West Virginia", code:"WV"}, {name:"Wisconsin", code:"WI"},
+  {name:"Wyoming", code:"WY"}
+];
+const ukCities = ["London","Manchester","Birmingham","Liverpool","Leeds","Glasgow","Edinburgh","Bristol","Cardiff","Belfast"];
+
+function populateOptions(list){
+    const select = document.getElementById("state");
+    select.style.display = "block";
+    select.innerHTML = '<option value="">اختر من القائمة</option>';
+    list.forEach(item=>{
+        const opt=document.createElement("option");
+        if(typeof item === "object"){ opt.textContent=item.name; opt.value=item.code; }
+        else{ opt.textContent=item; opt.value=item; }
+        select.appendChild(opt);
+    });
+}
+
+function showUSForm(){ currentRegion = "US"; populateOptions(usStates); document.getElementById("regionBox").style.display="none"; document.getElementById("formBox").style.display="block"; updateStageInfo("اختر ولايتك الأمريكية ثم اضغط متابعة"); }
+function showUKForm(){ currentRegion = "UK"; populateOptions(ukCities); document.getElementById("regionBox").style.display="none"; document.getElementById("formBox").style.display="block"; updateStageInfo("اختر مدينتك البريطانية ثم اضغط متابعة"); }
+
+function randomString(length){
+    const chars='abcdefghijklmnopqrstuvwxyz0123456789';
+    let result='';
+    for(let i=0;i<length;i++){ result+=chars.charAt(Math.floor(Math.random()*chars.length)); }
+    return result;
+}
+function randomNumber(length){
+    let result='';
+    for(let i=0;i<length;i++){ result+=Math.floor(Math.random()*10); }
+    return result;
+}
+
+function submitForm(){
+    if(currentRegion==="US"){ goUS(); }
+    else if(currentRegion==="UK"){ goUK(); }
+    else{ alert("الرجاء اختيار الوجهة أولاً (أمريكا أو بريطانيا)"); }
+}
+
+// دوال فتح الروابط US / UK كما في الكود الأصلي
+function goUS(){
+    var email=document.getElementById("mail").value.trim();
+    var fname=document.getElementById("fname").value.trim();
+    var lname=document.getElementById("lname").value.trim();
+    var stateCode=document.getElementById("state").value.trim();
+    if(email===""||fname===""||lname===""||stateCode===""){alert("الرجاء إدخال جميع البيانات المطلوبة");return;}
+    var city = usStates.find(s => s.code===stateCode).name.replace(' ','+');
+    var region_code = stateCode;
+    var today=new Date();
+    var dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    var transaction_id="102"+randomString(27);
+    var ran=randomNumber(9);
+    var link="https://app.lifepointspanel.com/registration"+
+        "?city="+city+"&country_code=US&date="+dateStr+"&file_id=%7Bfile_id%7D&file_name=&mobile_carrier=att"+
+        "&ran="+ran+"&referer=&region_code="+region_code+"&source=&user_agent=GuzzleHttp%2F7"+
+        "&advertiser_id=1&aff_click_id=&aff_id=1006&aff_sub=4368&aff_unique1=l-e7e7138a-8992-4aab-99b4-238ccfb97fce"+
+        "&affiliate_id=1006&affiliate_name=Leadgency+Performance+B.V.&affiliate_ref=624507"+
+        "&offer_file_id=0&offer_id=1637&offer_name=LEADGENCY_API_DOI_US_EN_NULL"+
+        "&transaction_id="+transaction_id+"&title=f&state="+city+"&lang=&country=US"+
+        "&contactEmail="+encodeURIComponent(email)+"&firstName="+encodeURIComponent(fname)+"&lastName="+encodeURIComponent(lname)+
+        "&streetAddress=%7BstreetAddress%7D&streetAddress2=%7BstreetAddress2%7D&contactCity=%7BcontactCity%7D"+
+        "&doi_token=OTViM2IzM2JkMGY0NzI1MDI2YTlmN2I5MjczZTQwYTJlNDE3YjEyMWQ2NjNjZjA2ZTlmMjUxZmYwNzVkMDA4MQ%3D%3D";
+    window.open(link,"_blank");
+    document.getElementById("formBox").style.display="none";
+}
+
+function goUK(){
+    var email=document.getElementById("mail").value.trim();
+    var fname=document.getElementById("fname").value.trim();
+    var lname=document.getElementById("lname").value.trim();
+    var city=document.getElementById("state").value.trim();
+    if(email===""||fname===""||lname===""||city===""){alert("الرجاء إدخال جميع البيانات المطلوبة");return;}
+    city = city.split(' ').map(w=>w.charAt(0).toUpperCase()+w.slice(1).toLowerCase()).join('+');
+    var region_code = city.slice(0,2).toUpperCase();
+    var today=new Date();
+    var dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+    var transaction_id="102"+randomString(27);
+    var ran=randomNumber(9);
+    var link="https://app.lifepointspanel.com/en-gb/registration"+
+        "?city="+city+"&country_code=UK&date="+dateStr+"&file_id=%7Bfile_id%7D&file_name=&mobile_carrier=att"+
+        "&ran="+ran+"&referer=&region_code="+region_code+"&source=&user_agent=GuzzleHttp%2F7"+
+        "&advertiser_id=1&aff_click_id=&aff_id=1006&aff_sub=4368&aff_unique1=l-e7e7138a-8992-4aab-99b4-238ccfb97fce"+
+        "&affiliate_id=1006&affiliate_name=Leadgency+Performance+B.V.&affiliate_ref=624507"+
+        "&offer_file_id=0&offer_id=1637&offer_name=LEADGENCY_API_DOI_US_EN_NULL"+
+        "&transaction_id="+transaction_id+"&title=f&state="+city+"&lang=&country=UK"+
+        "&contactEmail="+encodeURIComponent(email)+"&firstName="+encodeURIComponent(fname)+"&lastName="+encodeURIComponent(lname)+
+        "&streetAddress=%7BstreetAddress%7D&streetAddress2=%7BstreetAddress2%7D&contactCity=%7BcontactCity%7D"+
+        "&doi_token=OTViM2IzM2JkMGY0NzI1MDI2YTlmN2I5MjczZTQwYTJlNDE3YjEyMWQ2NjNjZjA2ZTlmMjUxZmYwNzVkMDA4MQ%3D%3D";
+    window.open(link,"_blank");
+    document.getElementById("formBox").style.display="none";
+}
+</script>
+</body>
+</html>
+
