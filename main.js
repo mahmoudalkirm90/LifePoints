@@ -1,27 +1,27 @@
 
-// خلفية ماتريكس
-const canvas = document.getElementById("matrixCanvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
-const fontSize = 16;
-const columns = Math.floor(canvas.width / fontSize);
-const drops = Array(columns).fill(1);
-function drawMatrix() {
-  ctx.fillStyle = 'rgba(0,0,0,0.05)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = '#0F0';
-  ctx.font = fontSize + "px monospace";
-  for (let i = 0; i < drops.length; i++) {
-    const text = letters.charAt(Math.floor(Math.random() * letters.length));
-    ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) { drops[i] = 0; }
-    drops[i]++;
-  }
-}
-setInterval(drawMatrix, 50);
-window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+// // خلفية ماتريكس
+// const canvas = document.getElementById("matrixCanvas");
+// const ctx = canvas.getContext("2d");
+// canvas.width = window.innerWidth;
+// canvas.height = window.innerHeight;
+// const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()*&^%';
+// const fontSize = 16;
+// const columns = Math.floor(canvas.width / fontSize);
+// const drops = Array(columns).fill(1);
+// function drawMatrix() {
+//   ctx.fillStyle = 'rgba(0,0,0,0.05)';
+//   ctx.fillRect(0, 0, canvas.width, canvas.height);
+//   ctx.fillStyle = '#0F0';
+//   ctx.font = fontSize + "px monospace";
+//   for (let i = 0; i < drops.length; i++) {
+//     const text = letters.charAt(Math.floor(Math.random() * letters.length));
+//     ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+//     if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) { drops[i] = 0; }
+//     drops[i]++;
+//   }
+// }
+// setInterval(drawMatrix, 50);
+// window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
 
 // كلمات مرور الزوار
 let visitorPasswords = [
@@ -35,30 +35,22 @@ let usedPasswords = JSON.parse(sessionStorage.getItem("usedPasswords") || "[]");
 function updateStageInfo(text){ document.getElementById("stageInfo").textContent = text; }
 
 function checkPassword(){
-    const passInput = document.getElementById("password").value.trim();
-    if(passInput === "bodex55510200"){
-        document.getElementById("adminPanel").style.display = "block";
-        updateStageInfo("مرحباً بالمدير! يمكنك نسخ كلمات المرور للزوار.");
-        document.getElementById("loginBox").style.display = "none";
-        displayVisitorPasswords();
-        document.getElementById("password").value = "";
-        return;
-    }
-    if(visitorPasswords.includes(passInput)){
-        if(usedPasswords.includes(passInput)){
-            alert("تم استخدام كلمة المرور وانتهت صلاحيتها.");
-        } else {
-            usedPasswords.push(passInput);
-            sessionStorage.setItem("usedPasswords", JSON.stringify(usedPasswords));
+    // const passInput = document.getElementById("password").value.trim();
+    // if(passInput === "bodex55510200"){
+    //     document.getElementById("adminPanel").style.display = "block";
+    //     updateStageInfo("مرحباً بالمدير! يمكنك نسخ كلمات المرور للزوار.");
+    //     document.getElementById("loginBox").style.display = "none";
+    //     displayVisitorPasswords();
+    //     document.getElementById("password").value = "";
+    //     return;
+    // }
+        
+            // usedPasswords.push(passInput);
+            // sessionStorage.setItem("usedPasswords", JSON.stringify(usedPasswords));
             document.getElementById("loginBox").style.display = "none";
             document.getElementById("regionBox").style.display = "block";
             updateStageInfo("اختر دولتك أولاً");
         }
-    } else {
-        alert("كلمة المرور غير صحيحة.");
-    }
-    document.getElementById("password").value = "";
-}
 
 // عرض كلمات السر مع زر نسخ صغير
 function displayVisitorPasswords(){
@@ -190,7 +182,7 @@ function goUS(){
                "firstName="+fname+"&"+
                "lastName="+lname+"&"+
                "contactCity="+city
-               window.open(link,"_blank");
+               console.log(link)
     document.getElementById("formBox").style.display="none";
     }
 
