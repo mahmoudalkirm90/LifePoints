@@ -166,19 +166,33 @@ function goUS(){
     var dateStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
     var transaction_id="102"+randomString(27);
     var ran=randomNumber(9);
-    var link="https://app.lifepointspanel.com/registration"+
-        "?city="+city+"&country_code=US&date="+dateStr+"&file_id=%7Bfile_id%7D&file_name=&mobile_carrier=att"+
-        "&ran="+ran+"&referer=&region_code="+region_code+"&source=&user_agent=GuzzleHttp%2F7"+
-        "&advertiser_id=1&aff_click_id=&aff_id=1006&aff_sub=4368&aff_unique1=l-e7e7138a-8992-4aab-99b4-238ccfb97fce"+
-        "&affiliate_id=1006&affiliate_name=Leadgency+Performance+B.V.&affiliate_ref=624507"+
-        "&offer_file_id=0&offer_id=1637&offer_name=LEADGENCY_API_DOI_US_EN_NULL"+
-        "&transaction_id="+transaction_id+"&title=f&state="+city+"&lang=&country=US"+
-        "&contactEmail="+encodeURIComponent(email)+"&firstName="+encodeURIComponent(fname)+"&lastName="+encodeURIComponent(lname)+
-        "&streetAddress=%7BstreetAddress%7D&streetAddress2=%7BstreetAddress2%7D&contactCity=%7BcontactCity%7D"+
-        "&doi_token=OTViM2IzM2JkMGY0NzI1MDI2YTlmN2I5MjczZTQwYTJlNDE3YjEyMWQ2NjNjZjA2ZTlmMjUxZmYwNzVkMDA4MQ%3D%3D";
-    window.open(link,"_blank");
+    // var link="https://app.lifepointspanel.com/registration"+
+    //     "?city="+city+"&country_code=US&date="+dateStr+"&file_id=%7Bfile_id%7D&file_name=&mobile_carrier=att"+
+    //     "&ran="+ran+"&referer=&region_code="+region_code+"&source=&user_agent=GuzzleHttp%2F7"+
+    //     "&advertiser_id=1&aff_click_id=&aff_id=1006&aff_sub=4368&aff_unique1=l-e7e7138a-8992-4aab-99b4-238ccfb97fce"+
+    //     "&affiliate_id=1006&affiliate_name=Leadgency+Performance+B.V.&affiliate_ref=624507"+
+    //     "&offer_file_id=0&offer_id=1637&offer_name=LEADGENCY_API_DOI_US_EN_NULL"+
+    //     "&transaction_id="+transaction_id+"&title=f&state="+city+"&lang=&country=US"+
+    //     "&contactEmail="+encodeURIComponent(email)+"&firstName="+encodeURIComponent(fname)+"&lastName="+encodeURIComponent(lname)+
+    //     "&streetAddress=%7BstreetAddress%7D&streetAddress2=%7BstreetAddress2%7D&contactCity=%7BcontactCity%7D"+
+    //     "&doi_token=OTViM2IzM2JkMGY0NzI1MDI2YTlmN2I5MjczZTQwYTJlNDE3YjEyMWQ2NjNjZjA2ZTlmMjUxZmYwNzVkMDA4MQ%3D%3D";
+    
+
+    var link = "https://app.lifepointspanel.com/en-US/registration?city=Newyork&"+
+               "country_code=US"+
+               "&date="+dateStr+"ran=576602346"+
+               "&region_code="+region_code+"&"+
+               "user_agent=Mozilla%2F5.0+%28Linux%3B+1292187616+10%3B+K%29+AppleWebKit%2F537.36+%28KHTML%2C+Like+Gecko%29+Chrome%2F140.0.0.0+Mobile+Safari%2F537.36&advertiser_id=1"+
+               "&aff_id=1466&aff_sub2=1098_1_3062&affiliate_id=1466&affiliate_name=ARROYO&affiliate_ref=617979&offer_id=1237&offer_name=ARROYO_API_DOI_US_EN_1"+
+               "&transaction_id="+transaction_id+"&"+
+               "state="+stateCode+"&lang=EN&country=US"+
+               "&contactEmail="+email+"&"+
+               "firstName="+fname+"&"+
+               "lastName="+lname+"&"+
+               "contactCity="+city
+               window.open(link,"_blank");
     document.getElementById("formBox").style.display="none";
-}
+    }
 
 function goUK(){
     var email=document.getElementById("mail").value.trim();
