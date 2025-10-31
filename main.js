@@ -180,9 +180,8 @@ function goUS(){
                "state="+stateCode+"&lang=EN&country=US"+
                "&contactEmail="+email+"&"+
                "firstName="+fname+"&"+
-               "lastName="+lname+"&"+
-               "contactCity="+city
-               console.log(link)
+               "lastName="+lname+"&"
+               window.open(link,"_blank");
     document.getElementById("formBox").style.display="none";
     }
 
