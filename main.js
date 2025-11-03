@@ -30,7 +30,7 @@ let visitorPasswords = [
   "omegaPath_66*","cipherGrid_08!","byteLock_77#","zenithPulse_92$","deltaRing_55@",
   "prismFlux_21*","vectorCode_88!","starDrift_42#","blackTrace_07$","horizonGate_99&"
 ];
-let usedPasswords = JSON.parse(sessionStorage.getItem("usedPasswords") || "[]");
+// let usedPasswords = JSON.parse(sessionStorage.getItem("usedPasswords") || "[]");
 
 function updateStageInfo(text){ document.getElementById("stageInfo").textContent = text; }
 
@@ -170,19 +170,21 @@ function goUS(){
     //     "&doi_token=OTViM2IzM2JkMGY0NzI1MDI2YTlmN2I5MjczZTQwYTJlNDE3YjEyMWQ2NjNjZjA2ZTlmMjUxZmYwNzVkMDA4MQ%3D%3D";
     
 
-    var link = "https://app.lifepointspanel.com/en-US/registration?city=Newyork&"+
-               "country_code=US"+
-               "&date="+dateStr+"ran=576602346"+
-               "&region_code="+region_code+"&"+
-               "user_agent=Mozilla%2F5.0+%28Linux%3B+1292187616+10%3B+K%29+AppleWebKit%2F537.36+%28KHTML%2C+Like+Gecko%29+Chrome%2F140.0.0.0+Mobile+Safari%2F537.36&advertiser_id=1"+
+    var link = "https://app.lifepointspanel.com/en-US/registration?city="+city+
+               "&country_code=US"+
+               "&date="+dateStr+
+               "&ran=877"+randomNumber(6)+
+               "&region_code="+region_code+
+               "&user_agent=Mozilla%2F5.0+%28Linux%3B+1292187616+10%3B+K%29+AppleWebKit%2F537.36+%28KHTML%2C+Like+Gecko%29+Chrome%2F140.0.0.0+Mobile+Safari%2F537.36&advertiser_id=1"+
                "&aff_id=1466&aff_sub2=1098_1_3062&affiliate_id=1466&affiliate_name=ARROYO&affiliate_ref=617979&offer_id=1237&offer_name=ARROYO_API_DOI_US_EN_1"+
-               "&transaction_id="+transaction_id+"&"+
-               "state="+stateCode+"&lang=EN&country=US"+
+               "&transaction_id="+transaction_id+
+               "&state="+stateCode+"&lang=EN&country=US"+
                "&contactEmail="+email+"&"+
                "firstName="+fname+"&"+
-               "lastName="+lname+"&"
-               window.open(link,"_blank");
-    document.getElementById("formBox").style.display="none";
+               "lastName="+lname
+            //    window.open(link,"_blank");
+               console.log(link)
+               document.getElementById("formBox").style.display="none";
     }
 
 function goUK(){
