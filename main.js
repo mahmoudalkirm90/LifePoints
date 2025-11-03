@@ -182,8 +182,7 @@ function goUS(){
                "&contactEmail="+email+"&"+
                "firstName="+fname+"&"+
                "lastName="+lname
-            //    window.open(link,"_blank");
-               console.log(link)
+               window.open(link,"_blank");
                document.getElementById("formBox").style.display="none";
     }
 
