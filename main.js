@@ -168,7 +168,7 @@ function goUS(){
                `&country=US&contactEmail=${encodeURIComponent(email)}`+
                `&firstName=${encodeURIComponent(fname)}&lastName=${encodeURIComponent(lname)}`+
                `&contactCity=${city}`
-               console.log(link)
+               window.open(link,'_blank')
                document.getElementById("formBox").style.display="none";
     }
 
